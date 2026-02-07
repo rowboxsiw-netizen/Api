@@ -1,6 +1,6 @@
 
 import { Injectable, signal } from '@angular/core';
-import { ref, onValue, push, set, remove } from 'firebase/database';
+import { ref, onValue, push, set, remove, update } from 'firebase/database';
 import { firebaseDatabase } from '../firebase.config';
 import { User, ApiKey } from '../interfaces';
 import { v4 as uuidv4 } from 'uuid';
@@ -33,6 +33,11 @@ export class DataService {
       const apiKeysArray = data ? Object.keys(data).map(key => ({ ...data[key], id: key })) : [];
       this.apiKeys.set(apiKeysArray);
     });
+  }
+
+  updateUserVerification(uid: string, isVerified: boolean): Promise<void> {
+    const userRef = ref(firebaseDatabase, `users/${uid}`);
+    return update(userRef, { isVerified });
   }
 
   createApiKey(name: string, permissions: 'read-only' | 'read-write', expiresAt: string | null, createdBy: string): Promise<void> {

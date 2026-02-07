@@ -103,6 +103,16 @@ export class AdminDashboardComponent implements AfterViewInit {
     a.click();
   }
 
+  toggleVerification(user: User) {
+    this.dataService.updateUserVerification(user.uid, !user.isVerified)
+      .then(() => {
+        this.notificationService.show(`User ${user.fullName} has been ${!user.isVerified ? 'verified' : 'un-verified'}.`, 'success');
+      })
+      .catch(err => {
+        this.notificationService.show(`Failed to update user status: ${err.message}`, 'error');
+      });
+  }
+
   createChart() {
     if (!this.chartRef || !this.chartRef.nativeElement) {
       return;

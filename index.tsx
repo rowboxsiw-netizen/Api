@@ -1,34 +1,37 @@
 /*
   ================================================================================
-  === URGENT: VERCEL DEPLOYMENT INSTRUCTIONS & TROUBLESHOOTING                 ===
+  === URGENT VERCEL DEPLOYMENT FIX: READ CAREFULLY                             ===
   ================================================================================
 
-  This project is a "no-build" static Single Page Application (SPA).
-  It MUST be configured correctly in Vercel to avoid build failures.
+  Hello! The error you're seeing (`ERESOLVE`) is a Vercel configuration problem,
+  NOT a code problem. The solutions you found (updating package.json, using
+  --legacy-peer-deps) WILL NOT WORK because this project has NO `package.json`
+  and NO build step. It's a special "no-build" setup.
 
-  The error `ERESOLVE unable to resolve dependency tree` in your Vercel logs
-  means Vercel is trying to run `npm install`. This is INCORRECT for this project.
-  It happens if you select the "Node.js" framework preset by mistake.
+  Vercel is failing because it *thinks* it needs to run `npm install`.
+  You must tell it not to.
 
-  --- TO FIX THIS, YOU MUST CONFIGURE VERCEL AS FOLLOWS: ---
+  --- PLEASE FOLLOW THESE STEPS EXACTLY IN YOUR VERCEL PROJECT SETTINGS ---
 
-  1. Framework Preset:
-     - In your Vercel Project Settings, set the Framework Preset to "Other".
+  1.  **FRAMEWORK PRESET:**
+      - Set this to -> "Other"
 
-  2. Build & Development Settings:
-     - Build Command:    -> MUST BE EMPTY <-
-     - Output Directory: -> MUST BE EMPTY <-
-     - Install Command:  -> MUST BE EMPTY <-
-       (This is the most critical step to prevent the `npm install` error)
+  2.  **BUILD & DEVELOPMENT SETTINGS:**
+      - Build Command:    -> LEAVE THIS FIELD COMPLETELY EMPTY <-
+      - Output Directory: -> LEAVE THIS FIELD COMPLETELY EMPTY <-
+      - Install Command:  -> LEAVE THIS FIELD COMPLETELY EMPTY <-
+        (This is the most critical step. If this field is not empty,
+         the deployment will fail with the `ERESOLVE` error.)
 
-  3. Rewrites for SPA Routing:
-     - Go to Project Settings -> Rewrites.
-     - Source: `/(.*)`
-     - Destination: `/index.html`
+  3.  **REWRITES (for SPA routing):**
+      - Go to your project's "Settings" -> "Rewrites".
+      - Source: `/(.*)`
+      - Destination: `/index.html`
 
-  4. Environment Variables:
-     - Go to Project Settings -> Environment Variables.
-     - Add your Firebase configuration keys (e.g., FIREBASE_API_KEY).
+  4.  **ENVIRONMENT VARIABLES:**
+      - Add your Firebase keys here (e.g., FIREBASE_API_KEY).
+
+  Following these instructions will resolve the deployment error.
 */
 import '@angular/compiler';
 import { bootstrapApplication } from '@angular/platform-browser';
