@@ -1,0 +1,5 @@
+{
+  "name": "Advanced Firebase User Registration & Admin Analytics System",
+  "description": "A comprehensive system for user registration and administration, featuring real-time analytics, API key management, and a secure admin panel, all built on Angular and Firebase.",
+  "requestFramePermissions": []
+}
