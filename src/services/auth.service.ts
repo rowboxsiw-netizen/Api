@@ -52,7 +52,11 @@ export class AuthService {
         );
       }),
       catchError(error => {
-        this.notificationService.show(error.message, 'error');
+        if (error.code === 'auth/email-already-in-use') {
+          this.notificationService.show('This email is already in use. Please try a different email or log in.', 'error');
+        } else {
+          this.notificationService.show(error.message, 'error');
+        }
         throw error;
       })
     );
