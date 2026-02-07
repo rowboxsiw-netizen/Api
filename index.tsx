@@ -1,29 +1,34 @@
 /*
-  Vercel Deployment Configuration:
+  ================================================================================
+  === URGENT: VERCEL DEPLOYMENT INSTRUCTIONS & TROUBLESHOOTING                 ===
+  ================================================================================
 
-  This project is a Single Page Application (SPA) and can be deployed as a static site on Vercel.
-  Since we cannot add a vercel.json file, you will need to configure the project in the Vercel UI dashboard:
+  This project is a "no-build" static Single Page Application (SPA).
+  It MUST be configured correctly in Vercel to avoid build failures.
+
+  The error `ERESOLVE unable to resolve dependency tree` in your Vercel logs
+  means Vercel is trying to run `npm install`. This is INCORRECT for this project.
+  It happens if you select the "Node.js" framework preset by mistake.
+
+  --- TO FIX THIS, YOU MUST CONFIGURE VERCEL AS FOLLOWS: ---
 
   1. Framework Preset:
-     - Select "Other". Vercel might not auto-detect the setup since there's no package.json.
+     - In your Vercel Project Settings, set the Framework Preset to "Other".
 
   2. Build & Development Settings:
-     - Build Command: Leave this empty. This project doesn't have a build step; it uses import maps to load dependencies directly in the browser.
-     - Output Directory: Leave this empty. Vercel will serve files from the root.
-     - Install Command: Leave this empty.
+     - Build Command:    -> MUST BE EMPTY <-
+     - Output Directory: -> MUST BE EMPTY <-
+     - Install Command:  -> MUST BE EMPTY <-
+       (This is the most critical step to prevent the `npm install` error)
 
-  3. Rewrites for SPA:
-     - To ensure client-side routing works correctly, you must add a rewrite rule.
+  3. Rewrites for SPA Routing:
      - Go to Project Settings -> Rewrites.
      - Source: `/(.*)`
      - Destination: `/index.html`
 
   4. Environment Variables:
      - Go to Project Settings -> Environment Variables.
-     - Add all the Firebase configuration keys used in `src/firebase.config.ts`. For example:
-       - FIREBASE_API_KEY: your-firebase-api-key
-       - FIREBASE_AUTH_DOMAIN: your-project-id.firebaseapp.com
-       - ... and so on for all variables.
+     - Add your Firebase configuration keys (e.g., FIREBASE_API_KEY).
 */
 import '@angular/compiler';
 import { bootstrapApplication } from '@angular/platform-browser';

@@ -111,12 +111,16 @@ export class AdminDashboardComponent implements AfterViewInit {
     const registrationsByDay: { [key: string]: number } = {};
     
     users.forEach(user => {
-        const date = new Date(user.createdAt).toLocaleDateString();
+        const date = new Date(user.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
         registrationsByDay[date] = (registrationsByDay[date] || 0) + 1;
     });
 
-    const labels = Object.keys(registrationsByDay);
-    const data = Object.values(registrationsByDay);
+    const sortedRegistrations = Object.entries(registrationsByDay)
+      .sort(([dateA], [dateB]) => new Date(dateA).getTime() - new Date(dateB).getTime())
+      .slice(-7); // Show last 7 days for clarity
+
+    const labels = sortedRegistrations.map(([date]) => new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+    const data = sortedRegistrations.map(([, count]) => count);
 
     const ctx = this.chartRef.nativeElement.getContext('2d');
     if (!ctx) return;
@@ -126,45 +130,39 @@ export class AdminDashboardComponent implements AfterViewInit {
     }
     
     this.chart = new Chart(ctx, {
-      type: 'pie',
+      type: 'doughnut',
       data: {
         labels: labels,
         datasets: [{
-          label: 'Daily Registrations',
+          label: 'Registrations',
           data: data,
           backgroundColor: [
-            'rgba(255, 99, 132, 0.7)',
-            'rgba(54, 162, 235, 0.7)',
-            'rgba(255, 206, 86, 0.7)',
-            'rgba(75, 192, 192, 0.7)',
-            'rgba(153, 102, 255, 0.7)',
-            'rgba(255, 159, 64, 0.7)'
+            '#4F46E5', '#10B981', '#F59E0B', '#EF4444', '#3B82F6', '#8B5CF6', '#EC4899'
           ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)'
-          ],
-          borderWidth: 1
+          borderColor: '#1F2937', // bg-gray-800 from the parent div
+          borderWidth: 4,
+          hoverOffset: 8
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        cutout: '75%',
         plugins: {
           legend: {
-            position: 'top',
+            position: 'bottom',
              labels: {
-              color: '#D1D5DB' // text color for legend
+              color: '#D1D5DB',
+              padding: 20,
+              font: { size: 14 }
             }
           },
           title: {
             display: true,
-            text: 'User Registrations by Day',
-            color: '#F9FAFB' // text color for title
+            text: 'Recent User Registrations',
+            color: '#F9FAFB',
+            font: { size: 18, weight: 'bold' },
+            padding: { bottom: 20 }
           }
         }
       }
